@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>User CRUD Interface</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 8px;
+        }
+        .box {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .users {
+            margin-top: 10px;
+        }
+        pre {
+            background: #f7f7f7;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>User CRUD Interface</h1>
+
+<div class="box">
+    <h3>Add User</h3>
+    <input type="number" id="addId" placeholder="ID"><br>
+    <input type="text" id="addName" placeholder="Name"><br>
+    <input type="text" id="addEmail" placeholder="Email"><br>
+    <button onclick="addUser()">Add</button>
+</div>
+
+<div class="box">
+    <h3>Get All Users</h3>
+    <button onclick="getAllUsers()">Load Users</button>
+    <pre id="allUsers"></pre>
+</div>
+
+<div class="box">
+    <h3>Get User by ID</h3>
+    <input type="number" id="getId" placeholder="User ID"><br>
+    <button onclick="getUser()">Search</button>
+    <pre id="oneUser"></pre>
+</div>
+
+<div class="box">
+    <h3>Delete User</h3>
+    <input type="number" id="deleteId" placeholder="User ID"><br>
+    <button onclick="deleteUser()">Delete</button>
+    <pre id="deleteResult"></pre>
+</div>
+
+<script>
+
+    // POST - CREATE
+    function addUser() {
+        let user = {
+            id: parseInt(document.getElementById("addId").value),
+            name: document.getElementById("addName").value,
+            email: document.getElementById("addEmail").value
+        };
+
+        fetch("/users", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(user)
+        })
+            .then(res => res.json())
+            .then(data => alert("User added: " + JSON.stringify(data)));
+    }
+
+    // GET ALL
+    function getAllUsers() {
+        fetch("/users")
+            .then(res => res.json())
+            .then(data => document.getElementById("allUsers").textContent = JSON.stringify(data, null, 2));
+    }
+
+    // GET ONE
+    function getUser() {
+        let id = document.getElementById("getId").value;
+
+        fetch("/users/" + id)
+            .then(res => res.json())
+            .then(data => document.getElementById("oneUser").textContent = JSON.stringify(data, null, 2));
+    }
+
+    // DELETE
+    function deleteUser() {
+        let id = document.getElementById("deleteId").value;
+
+        fetch("/users/" + id, {
+            method: "DELETE"
+        })
+            .then(res => res.text())
+            .then(data => document.getElementById("deleteResult").textContent = data);
+    }
+
+</script>
+
+</body>
+</html>

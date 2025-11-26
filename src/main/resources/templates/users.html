@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Users List</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        a.button {
+            display: inline-block;
+            padding: 6px 10px;
+            margin: 5px 0;
+            border: 1px solid #333;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        a.delete {
+            color: #b00000;
+            border-color: #b00000;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Users</h1>
+
+<a class="button" th:href="@{/users/add}">Add New User</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Loop over list "users" sent by controller -->
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}">1</td>
+        <td th:text="${user.name}">Name</td>
+        <td th:text="${user.email}">email@example.com</td>
+        <td>
+            <a class="button delete"
+               th:href="@{/users/delete/{id}(id=${user.id})}">
+                Delete
+            </a>
+        </td>
+    </tr>
+    <!-- If list empty -->
+    <tr th:if="${#lists.isEmpty(users)}">
+        <td colspan="4">No users found.</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
